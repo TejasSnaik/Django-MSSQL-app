@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HOME</title>
+    <style>
+* {
+  box-sizing: border-box;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 40%;
+  font-size: 16px;
+  padding: 10px 20px 10px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 60%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#myTable th, #myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header, #myTable tr:hover {
+  background-color: #f1f1f1;
+}
+table {
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+th {
+  cursor: pointer;
+}
+
+th, td {
+  text-align: left;
+  padding: 16px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2
+}
+</style>
+</head>
+<body class="container">
+{% block content %}
+<center>
+<form action="add" method="POST">
+    {% csrf_token %}
+
+<table class="table table-sortable" id="myTable" style="width:100%" border="10">
+     <input type="submit" value="Add">
+    <thead>
+    <tr>
+        <th scope="col"> </th>
+        <th scope="col">id</th>
+        <th onclick="sortTable(2)">Products</th>
+        <th onclick="sortTable(3)">SubCategories</th>
+        <th onclick="sortTable(4)">Categories</th>
+
+    </tr>
+    </thead>
+    <tbody>
+        {% for data in obj %}
+        <div class="form-check">
+        <tr>
+            <td>
+                <input type="checkbox" name="list_check" value="{{data.id}}">
+            </td>
+                  <td>{{data.id}}</td>
+            <td>{{data.Products}}</td>
+            <td>{{data.SubCategories}}</td>
+            <td>{{data.Categories}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p>* Sort Table by Clicking the Headers</p>
+     </form>
+     </center>
+ <script>
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("myTable");
+  switching = true;
+  dir= "asc";
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName("TD")[n];
+        y = rows[i + 1].getElementsByTagName("TD")[n];
+
+        if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+
+          shouldSwitch= true;
+          break;
+        }
+      }
+
+      else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+
+      switchcount ++;
+    } else {
+
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+</script>
+{% endblock %}
+</body>
+</html>

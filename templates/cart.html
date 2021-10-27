@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CART</title>
+
+    <style>
+* {
+  box-sizing: border-box;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 40%;
+  font-size: 16px;
+  padding: 10px 20px 10px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myInput1 {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 40%;
+  font-size: 16px;
+  padding: 10px 20px 10px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 60%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#myTable th, #myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header, #myTable tr:hover {
+  background-color: #f1f1f1;
+}
+
+#myTable1 {
+  border-collapse: collapse;
+  width: 60%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#myTable1 th, #myTable1 td {
+  text-align: left;
+  padding: 12px;
+}
+
+#myTable1 tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable1 tr.header, #myTable1 tr:hover {
+  background-color: #f1f1f1;
+}
+
+table {
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+th {
+  cursor: pointer;
+}
+
+th, td {
+  text-align: left;
+  padding: 16px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2
+}
+
+</style>
+</head>
+<body class="container">
+{% block content %}
+<center>
+    <form class="sortable">
+
+    <table id="myTable" class="table table-sortable" style="width:100%" border="10">
+        <thead>
+        <tr>
+
+        <th>id</th>
+        <th onclick="sortTable(1)">Products</th>
+        <th onclick="sortTable(2)">SubCategories</th>
+        <th onclick="sortTable(3)">Categories</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for d in checked_instances %}
+        <tr>
+            <td>{{d.id}}</td>
+            <td>{{d.Products}}</td>
+            <td>{{d.SubCategories}}</td>
+            <td>{{d.Categories}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>     </th>
+            <th>     </th>
+            <th><input type="text" id="myInput" class="btn" onkeyup="myFunction()"
+                       placeholder="Search SubCategory" title="SubCategory">
+            </th>
+            <th><input type="text" id="myInput1" class="btn" onkeyup="myFunction1()"
+                       placeholder="Search Category" title="Category">
+            </th>
+
+        </tr>
+        </tfoot>
+    </table>
+
+    </form>
+</center>
+
+<script>
+function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[2];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+function myFunction1() {
+  var input1, filter1, table1, tr, td, j, txtValue1;
+  input1 = document.getElementById("myInput1");
+  filter1 = input1.value.toUpperCase();
+  table1 = document.getElementById("myTable");
+  tr = table1.getElementsByTagName("tr");
+  for (j = 0; j < tr.length; j++) {
+    td = tr[j].getElementsByTagName("td")[3];
+    if (td) {
+      txtValue1 = td.textContent || td.innerText;
+      if (txtValue1.toUpperCase().indexOf(filter1) > -1) {
+        tr[j].style.display = "";
+      } else {
+        tr[j].style.display = "none";
+      }
+    }
+  }
+}
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("myTable");
+  switching = true;
+  dir= "asc";
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName("TD")[n];
+        y = rows[i + 1].getElementsByTagName("TD")[n];
+
+        if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+
+          shouldSwitch= true;
+          break;
+        }
+      }
+
+      else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+
+      switchcount ++;
+    } else {
+
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+</script>
+{% endblock %}
+
+
+</body>
+</html>
